@@ -2,13 +2,13 @@
 <!--
     YTSR - Your TV Screen Recorder
     Developer: YOUNUS
-    NO android.permission.INTERNET — zero-network privacy by design.
+    Zero-network privacy by design — no network permissions declared.
 -->
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- ── PERMISSIONS (no INTERNET) ───────────────────────────────── -->
+    <!-- ── PERMISSIONS (network access intentionally excluded) ─────── -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"  android:maxSdkVersion="32" />
@@ -33,7 +33,6 @@
         android:theme="@style/Theme.YTSR"
         tools:targetApi="31">
 
-        <!-- Main Leanback launcher Activity -->
         <activity
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|screenSize"
@@ -46,10 +45,6 @@
             </intent-filter>
         </activity>
 
-        <!--
-            Transparent trampoline Activity — shows MediaProjection consent dialog.
-            Launched by AccessibilityService (which cannot call startActivityForResult itself).
-        -->
         <activity
             android:name=".MediaProjectionRequestActivity"
             android:exported="false"
@@ -59,20 +54,12 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!--
-            Foreground Service — foregroundServiceType="mediaProjection" is required
-            by Android 10+ to capture the screen while the app is in the background.
-        -->
         <service
             android:name=".RecordingService"
             android:exported="false"
             android:foregroundServiceType="mediaProjection"
             android:stopWithTask="false" />
 
-        <!--
-            Accessibility Service — intercepts remote [0][0] and [1][1] key presses
-            globally, even when Peo TV or any other app is in the foreground.
-        -->
         <service
             android:name=".YTSRAccessibilityService"
             android:exported="true"

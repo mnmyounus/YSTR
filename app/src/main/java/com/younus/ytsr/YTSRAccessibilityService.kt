@@ -54,7 +54,9 @@ class YTSRAccessibilityService : AccessibilityService() {
         Log.i(TAG, "Service connected — key filtering ACTIVE")
     }
 
-    override fun onInterrupt() = Log.w(TAG, "Service interrupted")
+    override fun onInterrupt() {
+        Log.w(TAG, "Service interrupted")
+    }
 
     override fun onDestroy() {
         isServiceRunning = false
@@ -111,7 +113,7 @@ class YTSRAccessibilityService : AccessibilityService() {
         }
     }
 
-    // ── Actions ───────────────────────────────────────────────────────────
+    // ── Actions ─────────────────────────────────────────────────────────
 
     /**
      * Launches the transparent MediaProjectionRequestActivity which shows

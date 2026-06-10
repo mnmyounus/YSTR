@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    YTSR Main Activity Layout
+    ─────────────────────────
+    Designed for 1080p TV at 10-foot viewing distance.
+    All text ≥ 18sp, high-contrast, D-pad navigable buttons only — no touch.
+-->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="80dp"
+        android:paddingEnd="80dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp">
+
+        <!-- ── Header ──────────────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="YTSR"
+                android:textSize="52sp"
+                android:textColor="@color/accent_red"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-condensed" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="end">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your TV Screen Recorder"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_secondary" />
+                <TextView
+                    android:id="@+id/tvAppVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="v1.0.0  |  YOUNUS"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_hint" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="@color/divider" android:layout_marginBottom="28dp" />
+
+        <!-- ── Two-column body ─────────────────────────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Left: Status + Buttons -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingEnd="24dp">
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="RECORDING STATUS" android:textSize="11sp"
+                    android:textColor="@color/text_hint" android:letterSpacing="0.15"
+                    android:layout_marginBottom="6dp" />
+                <TextView
+                    android:id="@+id/tvRecordingStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="⏸  Idle — Double-press [0] to start"
+                    android:textSize="20sp"
+                    android:textColor="@color/text_primary"
+                    android:background="@color/card_bg"
+                    android:padding="18dp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:layout_marginBottom="22dp" />
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="PERMISSIONS" android:textSize="11sp"
+                    android:textColor="@color/text_hint" android:letterSpacing="0.15"
+                    android:layout_marginBottom="6dp" />
+                <TextView
+                    android:id="@+id/tvPermissionStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Checking…"
+                    android:textSize="19sp"
+                    android:textColor="@color/text_primary"
+                    android:background="@color/card_bg"
+                    android:padding="18dp"
+                    android:layout_marginBottom="12dp" />
+                <Button
+                    android:id="@+id/btnRequestPermissions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Grant Permissions"
+                    android:textSize="17sp"
+                    android:backgroundTint="@color/accent_blue"
+                    android:focusable="true"
+                    android:layout_marginBottom="22dp"
+                    android:nextFocusDown="@+id/btnOpenAccessibility" />
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="ACCESSIBILITY SERVICE" android:textSize="11sp"
+                    android:textColor="@color/text_hint" android:letterSpacing="0.15"
+                    android:layout_marginBottom="6dp" />
+                <TextView
+                    android:id="@+id/tvAccessibilityStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Checking…"
+                    android:textSize="19sp"
+                    android:textColor="@color/text_primary"
+                    android:background="@color/card_bg"
+                    android:padding="18dp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:layout_marginBottom="12dp" />
+                <Button
+                    android:id="@+id/btnOpenAccessibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enable in TV Settings"
+                    android:textSize="17sp"
+                    android:backgroundTint="@color/accent_green"
+                    android:focusable="true"
+                    android:nextFocusUp="@id/btnRequestPermissions" />
+
+            </LinearLayout>
+
+            <!-- Right: Instructions -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingStart="24dp">
+
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:text="HOW TO USE" android:textSize="11sp"
+                    android:textColor="@color/text_hint" android:letterSpacing="0.15"
+                    android:layout_marginBottom="6dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@color/card_bg"
+                    android:padding="22dp">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="① Enable YTSR Accessibility Service\n   Settings → Accessibility → YTSR"
+                        android:textSize="18sp" android:textColor="@color/text_primary"
+                        android:lineSpacingMultiplier="1.5" android:layout_marginBottom="16dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="② Grant Microphone permission"
+                        android:textSize="18sp" android:textColor="@color/text_primary"
+                        android:lineSpacingMultiplier="1.5" android:layout_marginBottom="16dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="③ Open any app  (e.g. Peo TV)"
+                        android:textSize="18sp" android:textColor="@color/text_primary"
+                        android:lineSpacingMultiplier="1.5" android:layout_marginBottom="16dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="④  [ 0 ] [ 0 ]  quickly  →  START  🔴\n   Approve the capture dialog once"
+                        android:textSize="18sp" android:textColor="@color/accent_green"
+                        android:textStyle="bold" android:lineSpacingMultiplier="1.5"
+                        android:layout_marginBottom="16dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="⑤  [ 1 ] [ 1 ]  quickly  →  STOP  ✅\n   Video saved to device storage"
+                        android:textSize="18sp" android:textColor="@color/accent_red"
+                        android:textStyle="bold" android:lineSpacingMultiplier="1.5"
+                        android:layout_marginBottom="20dp" />
+
+                    <View android:layout_width="match_parent" android:layout_height="1dp"
+                        android:background="@color/divider" android:layout_marginBottom="14dp" />
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="🔒  No internet access.\n    All recordings stay on your device."
+                        android:textSize="15sp" android:textColor="@color/text_hint"
+                        android:lineSpacingMultiplier="1.5" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

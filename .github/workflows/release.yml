@@ -1,0 +1,167 @@
+# ══════════════════════════════════════════════════════════════════════════
+#  YTSR — Build & Release Debug APK
+#  Developer: YOUNUS
+#  ─────────────────────────────────────────────────────────────────────────
+#  Triggers:
+#    • git tag push  matching v*.*.*  (e.g.  git tag v1.0.0 && git push --tags)
+#    • Manual dispatch from the GitHub Actions UI tab
+#
+#  Steps:
+#    1.  Checkout repo
+#    2.  Security scan — fail immediately if INTERNET permission is present
+#    3.  Set up JDK 17 (Temurin) with Gradle cache
+#    4.  Build unsigned debug APK  (./gradlew assembleDebug)
+#    5.  Verify APK was produced
+#    6.  Create a GitHub Release and upload app-debug.apk as an asset
+# ══════════════════════════════════════════════════════════════════════════
+
+name: Build and Release Debug APK
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+  workflow_dispatch:
+    inputs:
+      label:
+        description: 'Custom release label  (e.g. beta-1)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write   # required to create GitHub Releases
+
+jobs:
+  build-release:
+    name: Build Debug APK → GitHub Release
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # ── 1. Checkout ────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history for changelog
+
+      # ── 2. Privacy guard — abort if INTERNET permission was added ──────
+      - name: 🔒 Security scan — no INTERNET permission allowed
+        run: |
+          echo "Scanning AndroidManifest.xml for android.permission.INTERNET..."
+          if grep -q "android.permission.INTERNET" app/src/main/AndroidManifest.xml; then
+            echo "FATAL: android.permission.INTERNET found — violates zero-network privacy requirement!"
+            exit 1
+          fi
+          echo "✅ No INTERNET permission found. Privacy check passed."
+
+      # ── 3. JDK 17 ──────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      # ── 4. Build ────────────────────────────────────────────────────────
+      - name: Grant Gradle execute permission
+        run: chmod +x ./gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug --stacktrace --no-daemon
+
+      # ── 5. Verify APK ───────────────────────────────────────────────────
+      - name: Verify APK exists
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          [ -f "$APK" ] || { echo "APK not found at $APK"; exit 1; }
+          echo "✅ APK found — $(du -sh $APK | cut -f1)"
+          echo "APK_PATH=$APK" >> $GITHUB_ENV
+
+      # ── 6. Resolve tag / release name ───────────────────────────────────
+      - name: Resolve release tag
+        id: meta
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+            TAG="${GITHUB_REF#refs/tags/}"
+          elif [[ -n "${{ github.event.inputs.label }}" ]]; then
+            TAG="manual-${{ github.event.inputs.label }}"
+          else
+            TAG="manual-$(date +'%Y%m%d-%H%M%S')"
+          fi
+          echo "tag=$TAG"          >> $GITHUB_OUTPUT
+          echo "name=YTSR $TAG"    >> $GITHUB_OUTPUT
+
+      # ── 7. Changelog from git log ────────────────────────────────────────
+      - name: Generate changelog
+        id: log
+        run: |
+          PREV=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -n "$PREV" ]; then
+            COMMITS=$(git log "$PREV"..HEAD --pretty=format:"- %s (%h)" --no-merges | head -25)
+          else
+            COMMITS=$(git log --pretty=format:"- %s (%h)" --no-merges | head -20)
+          fi
+          {
+            echo "commits<<EOF"
+            echo "$COMMITS"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      # ── 8. Create GitHub Release + upload APK ───────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name:   ${{ steps.meta.outputs.tag }}
+          name:       ${{ steps.meta.outputs.name }}
+          files:      ${{ env.APK_PATH }}
+          draft:      false
+          prerelease: ${{ contains(steps.meta.outputs.tag, 'alpha') || contains(steps.meta.outputs.tag, 'beta') || contains(steps.meta.outputs.tag, 'manual') }}
+          body: |
+            ## 📺 YTSR — Your TV Screen Recorder
+            **Developer:** YOUNUS &nbsp;|&nbsp; **Build:** Debug (unsigned)
+
+            ---
+
+            ### 📦 Install via ADB
+            ```bash
+            adb install app-debug.apk
+            ```
+            Or sideload using a file manager app on Android TV.
+
+            ---
+
+            ### 🚀 Setup (first time only)
+            | # | Action |
+            |---|--------|
+            | 1 | Install APK → open **YTSR** from TV launcher |
+            | 2 | Tap **Grant Permissions** → allow Microphone |
+            | 3 | Tap **Enable in TV Settings** → Accessibility → **YTSR Key Interceptor** → **ON** |
+
+            ### ▶ Recording
+            | Key | Action |
+            |-----|--------|
+            | **[ 0 ] [ 0 ]** (within 500 ms) | START recording — approve system consent dialog once |
+            | **[ 1 ] [ 1 ]** (within 500 ms) | STOP & auto-save as `.mp4` |
+
+            Recordings saved to:
+            - **API 29+** → `Android/data/com.younus.ytsr/files/Recordings/`
+            - **API ≤ 28** → `Movies/YTSR/`
+
+            ---
+
+            ### 🔒 Privacy Guarantee
+            - ✅ `android.permission.INTERNET` is **NOT** in the manifest (verified by CI)
+            - ✅ Recordings stay **on-device only** — zero network activity
+            - ✅ **No auto-recording** — always idle until you double-press
+
+            ---
+
+            ### 📋 Changes
+            ${{ steps.log.outputs.commits }}
+
+            ---
+            > ⚠️ Debug build — not signed with a release key. For personal/testing use.
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

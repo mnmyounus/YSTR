@@ -144,6 +144,7 @@ class RecordingService : Service() {
         if (!isRecording) return
         try {
             recorder?.stop()
+            recorder?.release()  // CRITICAL: must release() to finalize the MP4 file
             Log.i(TAG, "■ Saved → ${outputFile?.absolutePath}")
         } catch (e: Exception) {
             Log.e(TAG, "stop() failed — discarding file", e)
@@ -185,7 +186,7 @@ class RecordingService : Service() {
         }
     }
 
-    // ── Helpers ────────────────────────────────────────────────────────────
+    // ── Helpers ─────────────────────────────────────────────────────────
 
     private fun release() {
         runCatching { virtualDisplay?.release() }

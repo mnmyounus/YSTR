@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- app_banner.xml — Android TV Leanback launcher banner (320×180 ratio) -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#0D0D1A" />
+        </shape>
+    </item>
+    <!-- Red accent bar (left) -->
+    <item android:gravity="start|center_vertical" android:left="40dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#E94560" />
+            <size android:width="8dp" android:height="64dp" />
+        </shape>
+    </item>
+    <!-- "YTSR" text represented as a wide red block (banner text is typically a PNG;
+         replace this file with a proper 320×180 px PNG for production) -->
+    <item android:gravity="center">
+        <shape android:shape="rectangle">
+            <solid android:color="#00000000" />
+            <size android:width="200dp" android:height="60dp" />
+        </shape>
+    </item>
+</layer-list>

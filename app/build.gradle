@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace   'com.younus.ytsr'
-    compileSdk  34
+    compileSdk  35
 
     defaultConfig {
         applicationId   "com.younus.ytsr"
         minSdk          23        // Android 6.0 — covers all active Android TV hardware
-        targetSdk       34
+        targetSdk       35
         versionCode     1
         versionName     "1.0.0"
     }

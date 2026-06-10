@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ══ STRINGS ════════════════════════════════════════════════════════ -->
+    <string name="app_name">YTSR Your TV Screen Recorder</string>
+    <string name="accessibility_service_label">YTSR Key Interceptor</string>
+    <string name="accessibility_service_description">
+        YTSR uses this service to intercept remote control key presses globally,
+        even while other apps (e.g. Peo TV) are in the foreground.\n\n
+        Double-press [0] to START recording.\n
+        Double-press [1] to STOP and save.\n\n
+        No internet access. No screen content is read. Only [0] and [1]
+        double-press events are watched to control recording.
+    </string>
+
+    <!-- ══ COLORS ═════════════════════════════════════════════════════════ -->
+    <color name="bg_dark">#0D0D1A</color>
+    <color name="card_bg">#1A1A2E</color>
+    <color name="divider">#2A2A40</color>
+    <color name="text_primary">#E8E8F0</color>
+    <color name="text_secondary">#9090A8</color>
+    <color name="text_hint">#585870</color>
+    <color name="accent_red">#E94560</color>
+    <color name="accent_blue">#3A7BD5</color>
+    <color name="accent_green">#2ECC71</color>
+    <color name="colorPrimary">#E94560</color>
+    <color name="colorPrimaryVariant">#B03048</color>
+
+    <!-- ══ STYLES / THEMES ════════════════════════════════════════════════ -->
+    <!--
+        TV-safe theme inheriting Theme.Leanback.
+        Leanback handles: D-pad focus rings, no action bar, full-screen layout,
+        and the standard Android TV visual language.
+    -->
+    <style name="Theme.YTSR" parent="@style/Theme.Leanback">
+        <item name="android:windowBackground">@color/bg_dark</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryVariant</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
